@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  # API Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nfe-api
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=nfe_api;Username=postgres;Password=${DB_PASSWORD}
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - Sefaz__CertificatePath=/app/certificates/cert.pfx
+      - Sefaz__CertificatePassword=${CERT_PASSWORD}
+      - Sefaz__Environment=homologacao
+      - Sefaz__State=GO
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nfe_network
+    volumes:
+      - ./certificates:/app/certificates:ro
+      - ./logs:/app/logs
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: nfe-postgres
+    environment:
+      POSTGRES_DB: nfe_api
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    networks:
+      - nfe_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nfe_api"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  nfe_network:
+    driver: bridge
