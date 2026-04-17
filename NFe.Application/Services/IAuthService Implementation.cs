@@ -3,12 +3,14 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using BCryptNet = BCrypt.Net.BCrypt;
 using NFe.Application.DTOs.Auth;
 using NFe.Application.Interfaces;
+using NFe.Infrastructure.Data;
 
 namespace NFe.Application.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : NFe.Application.Interfaces.IAuthService
     {
         private readonly IConfiguration _configuration;
         private readonly NfeDbContext _dbContext;
@@ -50,7 +52,7 @@ namespace NFe.Application.Services
         {
             try
             {
-                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
+                var key = GetJwtSecretKeyBytes();
                 var handler = new JwtSecurityTokenHandler();
 
                 handler.ValidateToken(token, new TokenValidationParameters
@@ -75,7 +77,7 @@ namespace NFe.Application.Services
 
         private string GenerateJwtToken(NFe.Domain.Entities.User user)
         {
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
+            var key = GetJwtSecretKeyBytes();
             var handler = new JwtSecurityTokenHandler();
 
             var claims = new List<Claim>
@@ -101,8 +103,18 @@ namespace NFe.Application.Services
 
         private bool VerifyPassword(string password, string hash)
         {
-            // Usar BCrypt em produção
-            return BCrypt.Net.BCrypt.Verify(password, hash);
+            return BCryptNet.Verify(password, hash);
+        }
+
+        private byte[] GetJwtSecretKeyBytes()
+        {
+            var secretKey = _configuration["Jwt:SecretKey"];
+            if (string.IsNullOrWhiteSpace(secretKey))
+            {
+                throw new InvalidOperationException("Configuração Jwt:SecretKey não encontrada.");
+            }
+
+            return Encoding.ASCII.GetBytes(secretKey);
         }
     }
 }
