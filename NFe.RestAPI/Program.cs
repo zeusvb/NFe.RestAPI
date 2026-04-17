@@ -53,6 +53,8 @@ try
         };
     });
 
+    builder.Services.AddAuthorization();
+
     builder.Services.AddDbContext<NfeDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -98,6 +100,8 @@ try
             }
         });
     });
+
+    builder.Services.AddControllers();
 
     builder.Services.AddHealthChecks();
 
