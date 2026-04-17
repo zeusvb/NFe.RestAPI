@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.4.11626.88 stable
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.RestAPI", "NFe.RestAPI\NFe.RestAPI.csproj", "{0B5A3A1B-8C32-A200-EE26-CC26F586A3BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.RestAPI", "src\NFe.RestAPI\NFe.RestAPI.csproj", "{0B5A3A1B-8C32-A200-EE26-CC26F586A3BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Application", "NFe.Application\NFe.Application.csproj", "{9E123CFC-1697-30B9-5A11-4F6C6BCC6F4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Application", "src\NFe.Application\NFe.Application.csproj", "{9E123CFC-1697-30B9-5A11-4F6C6BCC6F4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Domain", "NFe.Domain\NFe.Domain.csproj", "{0DC35BA4-BC49-167E-6963-C4C9228D3DF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Domain", "src\NFe.Domain\NFe.Domain.csproj", "{0DC35BA4-BC49-167E-6963-C4C9228D3DF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Infrastructure", "NFe.Infrastructure\NFe.Infrastructure.csproj", "{94FBAF65-67ED-C89B-EB02-B2BB9A308D58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFe.Infrastructure", "src\NFe.Infrastructure\NFe.Infrastructure.csproj", "{94FBAF65-67ED-C89B-EB02-B2BB9A308D58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
