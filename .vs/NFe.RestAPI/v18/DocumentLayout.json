@@ -1,12 +1,54 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Fontes\\Nfe.Api\\NFe.RestAPI\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Fontes\\NFe.RestAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0B5A3A1B-8C32-A200-EE26-CC26F586A3BB}|NFe.RestAPI\\NFe.RestAPI.csproj|c:\\fontes\\nfe.restapi\\nfe.restapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B5A3A1B-8C32-A200-EE26-CC26F586A3BB}|NFe.RestAPI\\NFe.RestAPI.csproj|solutionrelative:nfe.restapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B5A3A1B-8C32-A200-EE26-CC26F586A3BB}|NFe.RestAPI\\NFe.RestAPI.csproj|c:\\fontes\\nfe.restapi\\nfe.restapi\\logs\\nfe-api-20260417.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{0B5A3A1B-8C32-A200-EE26-CC26F586A3BB}|NFe.RestAPI\\NFe.RestAPI.csproj|solutionrelative:nfe.restapi\\logs\\nfe-api-20260417.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Fontes\\NFe.RestAPI\\NFe.RestAPI\\Program.cs",
+              "RelativeDocumentMoniker": "NFe.RestAPI\\Program.cs",
+              "ToolTip": "C:\\Fontes\\NFe.RestAPI\\NFe.RestAPI\\Program.cs",
+              "RelativeToolTip": "NFe.RestAPI\\Program.cs",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAHIAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-17T16:39:19.295Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "nfe-api-20260417.txt",
+              "DocumentMoniker": "C:\\Fontes\\NFe.RestAPI\\NFe.RestAPI\\logs\\nfe-api-20260417.txt",
+              "RelativeDocumentMoniker": "NFe.RestAPI\\logs\\nfe-api-20260417.txt",
+              "ToolTip": "C:\\Fontes\\NFe.RestAPI\\NFe.RestAPI\\logs\\nfe-api-20260417.txt",
+              "RelativeToolTip": "NFe.RestAPI\\logs\\nfe-api-20260417.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-04-17T16:39:12.47Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
