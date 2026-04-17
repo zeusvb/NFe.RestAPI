@@ -7,18 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../NFe.Domain/NFe.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="NFe.Domain">
-      <HintPath>..\NFe.Domain\bin\Debug\net8.0\NFe.Domain.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="../NFe.Infrastructure/NFe.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

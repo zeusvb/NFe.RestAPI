@@ -1,16 +1,12 @@
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 using NFe.Infrastructure.Data;
 using NFe.Application.Interfaces;
 using NFe.Infrastructure.ExternalServices;
-using NFe.Application.Services;
 using IAuthService = NFe.Application.Interfaces.IAuthService;
-using NFe.Wsdl;
-using INfeService = NFe.Application.Services.INfeService;
-using Microsoft.OpenApi;
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(new ConfigurationBuilder()
@@ -26,12 +22,12 @@ try
 {
     Log.Information("Iniciando NFe/NFCe REST API");
 
-    var builder = WebApplicationBuilder.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog();
 
     var jwtSettings = builder.Configuration.GetSection("Jwt");
-    var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+    var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"] ?? throw new InvalidOperationException("Configuração Jwt:SecretKey não encontrada."));
 
     builder.Services.AddAuthentication(options =>
     {
@@ -56,9 +52,9 @@ try
     builder.Services.AddDbContext<NfeDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    builder.Services.AddScoped<IAuthService, AuthService>();
-    builder.Services.AddScoped<INfeService, INfeServico>();
-    builder.Services.AddScoped<INfceService, NfceService>();
+    builder.Services.AddScoped<IAuthService, NFe.Application.Services.AuthService>();
+    builder.Services.AddScoped<INfeService>(_ => throw new NotImplementedException("INfeService implementation is pending."));
+    builder.Services.AddScoped<INfceService>(_ => throw new NotImplementedException("INfceService implementation is pending."));
     builder.Services.AddScoped<ISefazService, SefazService>();
     builder.Services.AddScoped<ICertificateService, CertificateService>();
 
@@ -71,33 +67,7 @@ try
     });
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(options =>
-    {
-        options.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "NFe/NFCe REST API",
-            Version = "v1",
-            Description = "API para emissão de Notas Fiscais com integração SEFAZ Goiás"
-        });
-
-        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT"
-        });
-
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                },
-                new string[] { }
-            }
-        });
-    });
+    builder.Services.AddSwaggerGen();
 
     builder.Services.AddHealthChecks();
 
