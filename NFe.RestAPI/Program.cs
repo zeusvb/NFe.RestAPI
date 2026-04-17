@@ -1,16 +1,14 @@
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
-using NFe.Infrastructure.Data;
-using NFe.Application.Interfaces;
-using NFe.Infrastructure.ExternalServices;
-using NFe.Application.Services;
-using IAuthService = NFe.Application.Interfaces.IAuthService;
-using NFe.Wsdl;
-using INfeService = NFe.Application.Services.INfeService;
 using Microsoft.OpenApi;
+using System.Text;
+using NFe.Application.Interfaces;
+using NFe.Infrastructure.Authentication;
+using NFe.Infrastructure.Data;
+using NFe.Infrastructure.ExternalServices;
+using NFe.Infrastructure.Services;
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(new ConfigurationBuilder()
@@ -26,12 +24,17 @@ try
 {
     Log.Information("Iniciando NFe/NFCe REST API");
 
-    var builder = WebApplicationBuilder.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog();
 
     var jwtSettings = builder.Configuration.GetSection("Jwt");
-    var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+    var jwtSecret = jwtSettings["SecretKey"];
+    if (string.IsNullOrWhiteSpace(jwtSecret))
+    {
+        throw new InvalidOperationException("Configuração Jwt:SecretKey não encontrada.");
+    }
+    var secretKey = Encoding.ASCII.GetBytes(jwtSecret);
 
     builder.Services.AddAuthentication(options =>
     {
@@ -57,7 +60,7 @@ try
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     builder.Services.AddScoped<IAuthService, AuthService>();
-    builder.Services.AddScoped<INfeService, INfeServico>();
+    builder.Services.AddScoped<INfeService, NfeService>();
     builder.Services.AddScoped<INfceService, NfceService>();
     builder.Services.AddScoped<ISefazService, SefazService>();
     builder.Services.AddScoped<ICertificateService, CertificateService>();
@@ -87,16 +90,6 @@ try
             BearerFormat = "JWT"
         });
 
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                },
-                new string[] { }
-            }
-        });
     });
 
     builder.Services.AddHealthChecks();

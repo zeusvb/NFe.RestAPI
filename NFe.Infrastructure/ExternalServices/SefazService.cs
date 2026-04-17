@@ -4,6 +4,7 @@ using Polly;
 using Polly.Retry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NFe.Application.Interfaces;
 
 namespace NFe.Infrastructure.ExternalServices
 {

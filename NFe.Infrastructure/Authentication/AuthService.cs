@@ -1,12 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NFe.Application.DTOs.Auth;
 using NFe.Application.Interfaces;
+using NFe.Infrastructure.Data;
 
-namespace NFe.Application.Services
+namespace NFe.Infrastructure.Authentication
 {
     public class AuthService : IAuthService
     {
@@ -21,7 +23,7 @@ namespace NFe.Application.Services
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Username == request.Username);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
             if (user == null || !VerifyPassword(request.Password, user.PasswordHash))
                 throw new UnauthorizedAccessException("Usuário ou senha inválido");
@@ -50,7 +52,7 @@ namespace NFe.Application.Services
         {
             try
             {
-                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
+                var key = GetJwtSecretKeyBytes();
                 var handler = new JwtSecurityTokenHandler();
 
                 handler.ValidateToken(token, new TokenValidationParameters
@@ -63,7 +65,7 @@ namespace NFe.Application.Services
                     ValidAudience = _configuration["Jwt:Audience"],
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
+                }, out SecurityToken _);
 
                 return Task.FromResult(true);
             }
@@ -75,15 +77,15 @@ namespace NFe.Application.Services
 
         private string GenerateJwtToken(NFe.Domain.Entities.User user)
         {
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
+            var key = GetJwtSecretKeyBytes();
             var handler = new JwtSecurityTokenHandler();
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Name, user.Username),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Role, user.Role)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -99,9 +101,17 @@ namespace NFe.Application.Services
             return handler.WriteToken(token);
         }
 
-        private bool VerifyPassword(string password, string hash)
+        private byte[] GetJwtSecretKeyBytes()
         {
-            // Usar BCrypt em produção
+            var secretKey = _configuration["Jwt:SecretKey"];
+            if (string.IsNullOrWhiteSpace(secretKey))
+                throw new InvalidOperationException("Configuração Jwt:SecretKey não encontrada.");
+
+            return Encoding.ASCII.GetBytes(secretKey);
+        }
+
+        private static bool VerifyPassword(string password, string hash)
+        {
             return BCrypt.Net.BCrypt.Verify(password, hash);
         }
     }
