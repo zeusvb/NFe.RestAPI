@@ -3,14 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using BCryptNet = BCrypt.Net.BCrypt;
 using NFe.Application.DTOs.Auth;
 using NFe.Application.Interfaces;
 using NFe.Infrastructure.Data;
 
 namespace NFe.Application.Services
 {
-    public class AuthService : NFe.Application.Interfaces.IAuthService
+    public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
         private readonly NfeDbContext _dbContext;
@@ -103,7 +102,7 @@ namespace NFe.Application.Services
 
         private bool VerifyPassword(string password, string hash)
         {
-            return BCryptNet.Verify(password, hash);
+            return BCrypt.Net.BCrypt.Verify(password, hash);
         }
 
         private byte[] GetJwtSecretKeyBytes()

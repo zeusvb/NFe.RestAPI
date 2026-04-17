@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Duplicate service implementations exist under Service/ and ExternalServices/. Keep only ExternalServices/ in compilation. -->
     <Compile Remove="Service/**/*.cs" />
   </ItemGroup>
 

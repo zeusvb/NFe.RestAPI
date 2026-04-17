@@ -53,8 +53,8 @@ try
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     builder.Services.AddScoped<IAuthService, NFe.Application.Services.AuthService>();
-    builder.Services.AddScoped<INfeService>(_ => throw new NotImplementedException("INfeService ainda não foi implementado."));
-    builder.Services.AddScoped<INfceService>(_ => throw new NotImplementedException("INfceService ainda não foi implementado."));
+    builder.Services.AddScoped<INfeService>(_ => throw new NotImplementedException("INfeService implementation is pending."));
+    builder.Services.AddScoped<INfceService>(_ => throw new NotImplementedException("INfceService implementation is pending."));
     builder.Services.AddScoped<ISefazService, SefazService>();
     builder.Services.AddScoped<ICertificateService, CertificateService>();
 
