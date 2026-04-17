@@ -30,7 +30,7 @@ WORKDIR /app
 
 # Install required libraries for DANFE printing
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libgdiplus libc6-dev && \
+    apt-get install -y --no-install-recommends libgdiplus libc6-dev curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -45,6 +45,6 @@ ENV ASPNETCORE_URLS=http://+:5000
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD dotnet /app/Health.dll || exit 1
+  CMD curl -f http://localhost:5000/health || exit 1
 
 ENTRYPOINT ["dotnet", "NFe.RestAPI.dll"]
