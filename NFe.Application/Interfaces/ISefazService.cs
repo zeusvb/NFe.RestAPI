@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace NFe.Infrastructure.ExternalServices
+namespace NFe.Application.Interfaces
 {
     public interface ISefazService
     {
