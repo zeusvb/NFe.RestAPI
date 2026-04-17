@@ -1,16 +1,15 @@
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 using NFe.Infrastructure.Data;
 using NFe.Application.Interfaces;
 using NFe.Infrastructure.ExternalServices;
 using NFe.Application.Services;
 using IAuthService = NFe.Application.Interfaces.IAuthService;
-using NFe.Wsdl;
-using INfeService = NFe.Application.Services.INfeService;
-using Microsoft.OpenApi;
+using INfeService = NFe.Application.Interfaces.INfeService;
+using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(new ConfigurationBuilder()
@@ -26,12 +25,13 @@ try
 {
     Log.Information("Iniciando NFe/NFCe REST API");
 
-    var builder = WebApplicationBuilder.CreateBuilder(args);
+    var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.UseSerilog();
 
     var jwtSettings = builder.Configuration.GetSection("Jwt");
-    var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+    var secretKeyString = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("Jwt:SecretKey is not configured");
+    var secretKey = Encoding.ASCII.GetBytes(secretKeyString);
 
     builder.Services.AddAuthentication(options =>
     {
@@ -56,11 +56,11 @@ try
     builder.Services.AddDbContext<NfeDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    builder.Services.AddScoped<IAuthService, AuthService>();
-    builder.Services.AddScoped<INfeService, INfeServico>();
-    builder.Services.AddScoped<INfceService, NfceService>();
-    builder.Services.AddScoped<ISefazService, SefazService>();
-    builder.Services.AddScoped<ICertificateService, CertificateService>();
+    builder.Services.AddScoped<IAuthService, NFe.Application.Services.AuthService>();
+    builder.Services.AddScoped<INfeService, NFe.Application.Services.NfeService>();
+    builder.Services.AddScoped<NFe.Application.Interfaces.INfceService, NFe.Application.Services.NfceService>();
+    builder.Services.AddScoped<NFe.Infrastructure.ExternalServices.ISefazService, NFe.Infrastructure.ExternalServices.SefazService>();
+    builder.Services.AddScoped<NFe.Infrastructure.ExternalServices.ICertificateService, NFe.Infrastructure.ExternalServices.CertificateService>();
 
     builder.Services.AddCors(options =>
     {

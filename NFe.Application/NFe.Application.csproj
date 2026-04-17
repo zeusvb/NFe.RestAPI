@@ -13,12 +13,17 @@
 
   <ItemGroup>
     <ProjectReference Include="../NFe.Domain/NFe.Domain.csproj" />
+    <ProjectReference Include="../NFe.Infrastructure/NFe.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="NFe.Domain">
       <HintPath>..\NFe.Domain\bin\Debug\net8.0\NFe.Domain.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
   </ItemGroup>
 
 </Project>

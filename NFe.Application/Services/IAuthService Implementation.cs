@@ -5,10 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NFe.Application.DTOs.Auth;
 using NFe.Application.Interfaces;
+using NFe.Infrastructure.Data;
 
 namespace NFe.Application.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : NFe.Application.Interfaces.IAuthService
     {
         private readonly IConfiguration _configuration;
         private readonly NfeDbContext _dbContext;

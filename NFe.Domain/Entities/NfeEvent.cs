@@ -11,6 +11,6 @@ namespace NFe.Domain.Entities
         public string EventData { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public NfeDocument NfeDocument { get; set; }
+        public NfeDocument? NfeDocument { get; set; }
     }
 }

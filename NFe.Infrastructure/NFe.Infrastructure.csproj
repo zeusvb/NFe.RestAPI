@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../NFe.Domain/NFe.Domain.csproj" />
-    <ProjectReference Include="../NFe.Application/NFe.Application.csproj" />
   </ItemGroup>
 
 </Project>
