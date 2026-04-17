@@ -38,3 +38,13 @@ Health check: `http://localhost:5000/health`
 dotnet restore NFe.RestAPI.sln
 dotnet build NFe.RestAPI.sln
 ```
+
+## Configuração
+
+Defina credenciais por variáveis de ambiente (não versionar segredos):
+
+- `Jwt__SecretKey` (mínimo 32 caracteres)
+- `Jwt__Issuer`
+- `Jwt__Audience`
+- `Auth__Username`
+- `Auth__Password`

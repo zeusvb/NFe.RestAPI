@@ -30,7 +30,8 @@ namespace NFe.RestAPI.Controllers
         {
             try
             {
-                _logger.LogInformation("Tentativa de login do usuário: {Username}", request.Username);
+                var safeUsername = request.Username?.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                _logger.LogInformation("Tentativa de login do usuário: {Username}", safeUsername);
                 var response = await _authService.LoginAsync(request);
                 return Ok(response);
             }

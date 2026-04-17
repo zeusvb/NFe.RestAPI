@@ -37,6 +37,11 @@ namespace NFe.RestAPI.Controllers
                 _logger.LogWarning("Dados inválidos para NFC-e: {Message}", ex.Message);
                 return BadRequest(new { message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao emitir NFC-e");
+                return StatusCode(500, new { message = "Erro ao emitir NFC-e" });
+            }
         }
 
         [HttpGet("consultar/{accessKey}")]

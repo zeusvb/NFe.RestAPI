@@ -59,8 +59,9 @@ namespace NFe.RestAPI.Controllers
         {
             try
             {
-                _logger.LogInformation("Consultando NFe: {AccessKey}", accessKey);
-                var response = await _nfeService.ConsultarNfeAsync(accessKey);
+                var safeAccessKey = accessKey.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                _logger.LogInformation("Consultando NFe: {AccessKey}", safeAccessKey);
+                var response = await _nfeService.ConsultarNfeAsync(safeAccessKey);
                 return Ok(response);
             }
             catch (Exception ex)

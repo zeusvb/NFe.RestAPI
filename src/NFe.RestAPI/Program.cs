@@ -1,5 +1,6 @@
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -9,7 +10,6 @@ using NFe.Infrastructure.ExternalServices;
 using NFe.Application.Services;
 using IAuthService = NFe.Application.Interfaces.IAuthService;
 using NFe.Wsdl;
-using INfeService = NFe.Application.Services.INfeService;
 using Microsoft.OpenApi;
 
 Log.Logger = new LoggerConfiguration()
@@ -31,7 +31,12 @@ try
     builder.Host.UseSerilog();
 
     var jwtSettings = builder.Configuration.GetSection("Jwt");
-    var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+    var jwtSecret = jwtSettings["SecretKey"];
+    if (string.IsNullOrWhiteSpace(jwtSecret) || jwtSecret.Length < 32)
+    {
+        throw new InvalidOperationException("Jwt:SecretKey deve ser definido com pelo menos 32 caracteres.");
+    }
+    var secretKey = Encoding.ASCII.GetBytes(jwtSecret);
 
     builder.Services.AddAuthentication(options =>
     {
@@ -57,7 +62,7 @@ try
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     builder.Services.AddScoped<IAuthService, AuthService>();
-    builder.Services.AddScoped<INfeService, INfeServico>();
+    builder.Services.AddScoped<INfeService, NfeService>();
     builder.Services.AddScoped<INfceService, NfceService>();
     builder.Services.AddScoped<ISefazService, SefazService>();
     builder.Services.AddScoped<ICertificateService, CertificateService>();
@@ -109,8 +114,8 @@ try
         app.UseSwaggerUI();
     }
 
-    app.UseHttpsRedirection();
     app.UseSerilogRequestLogging();
+    app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseCors("AllowAll");

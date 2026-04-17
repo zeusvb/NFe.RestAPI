@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -19,15 +20,27 @@ namespace NFe.Application.Services
 
         public Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            if (!string.Equals(request.Username, "admin", StringComparison.OrdinalIgnoreCase) ||
-                !string.Equals(request.Password, "admin", StringComparison.Ordinal))
+            var configuredUsername = _configuration["Auth:Username"];
+            var configuredPassword = _configuration["Auth:Password"];
+
+            if (string.IsNullOrWhiteSpace(configuredUsername) || string.IsNullOrWhiteSpace(configuredPassword))
+                throw new InvalidOperationException("Credenciais de autenticação não configuradas.");
+
+            var requestPassword = request.Password ?? string.Empty;
+            var configuredPasswordBytes = Encoding.UTF8.GetBytes(configuredPassword);
+            var requestPasswordBytes = Encoding.UTF8.GetBytes(requestPassword);
+            var passwordMatches = configuredPasswordBytes.Length == requestPasswordBytes.Length &&
+                                  CryptographicOperations.FixedTimeEquals(configuredPasswordBytes, requestPasswordBytes);
+
+            if (!string.Equals(request.Username, configuredUsername, StringComparison.OrdinalIgnoreCase) ||
+                !passwordMatches)
                 throw new UnauthorizedAccessException("Usuário ou senha inválido");
 
             var user = new NFe.Domain.Entities.User
             {
                 Id = 1,
-                Username = "admin",
-                Email = "admin@nfe.local",
+                Username = configuredUsername,
+                Email = $"{configuredUsername}@nfe.local",
                 Role = "Admin",
                 IsActive = true,
                 PasswordHash = string.Empty
