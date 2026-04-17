@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NFe.Application.DTOs.Auth;
-using NFe.Infrastructure.Data;
-using System.Linq;
+using NFe.Application.Interfaces;
 
 namespace NFe.Application.Services
 {
