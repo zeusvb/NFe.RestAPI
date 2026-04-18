@@ -4,13 +4,13 @@ namespace NFe.Domain.Entities
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public string Role { get; set; } = "User";
-        public bool IsActive { get; set; } = true;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public int id { get; set; }
+        public string username { get; set; } = "";
+        public string email { get; set; } = "";
+        public string password_hash { get; set; } = "";
+        public string role { get; set; } = "User";
+        public bool is_active { get; set; } = true;
+        public DateTime create_at { get; set; } = DateTime.UtcNow;
+        public DateTime update_at { get; set; } = DateTime.UtcNow;
     }
 }

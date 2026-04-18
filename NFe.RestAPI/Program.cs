@@ -6,6 +6,7 @@ using NFe.Infrastructure.Data;
 using NFe.Application.Interfaces;
 using NFe.Infrastructure.ExternalServices;
 using NFe.Application.Services;
+using NFe.Domain.Interfaces;
 using IAuthService = NFe.Application.Interfaces.IAuthService;
 using INfeService = NFe.Application.Interfaces.INfeService;
 using Microsoft.OpenApi.Models;
@@ -63,6 +64,9 @@ try
     builder.Services.AddScoped<NFe.Application.Interfaces.INfceService, NFe.Application.Services.NfceService>();
     builder.Services.AddScoped<NFe.Infrastructure.ExternalServices.ISefazService, NFe.Infrastructure.ExternalServices.SefazService>();
     builder.Services.AddScoped<NFe.Infrastructure.ExternalServices.ICertificateService, NFe.Infrastructure.ExternalServices.CertificateService>();
+
+    // Registrar ZeusFiscal NfeService
+    builder.Services.AddScoped<IZeusFiscalNfeService, ZeusFiscalNfeService>();
 
     builder.Services.AddCors(options =>
     {

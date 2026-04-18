@@ -33,8 +33,15 @@ namespace NFe.RestAPI.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 _logger.LogInformation("Emitindo NFe para empresa: {CompanyId}", request.CompanyId);
                 var response = await _nfeService.EmitirNfeAsync(request);
+
+                if (!response.Success)
+                    return BadRequest(response);
+
                 return CreatedAtAction(nameof(ConsultarNfe), new { accessKey = response.AccessKey }, response);
             }
             catch (ArgumentException ex)
@@ -45,7 +52,7 @@ namespace NFe.RestAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao emitir NFe");
-                return StatusCode(500, new { message = "Erro ao emitir NFe" });
+                return StatusCode(500, new { message = "Erro ao emitir NFe", error = ex.Message });
             }
         }
 

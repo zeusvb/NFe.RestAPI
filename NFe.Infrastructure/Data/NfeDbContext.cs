@@ -18,6 +18,16 @@ namespace NFe.Infrastructure.Data
 
             modelBuilder.HasDefaultSchema("nfe");
 
+            // Force all table and column names to lowercase for PostgreSQL compatibility
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                entity.SetTableName(entity.GetTableName().ToLower());
+                foreach (var property in entity.GetProperties())
+                {
+                    property.SetColumnName(property.Name.ToLower());
+                }
+            }
+
             modelBuilder.Entity<Company>()
                 .ToTable("companies")
                 .HasKey(c => c.Id);
@@ -45,11 +55,14 @@ namespace NFe.Infrastructure.Data
 
             modelBuilder.Entity<User>()
                 .ToTable("users")
-                .HasKey(u => u.Id);
+                .HasKey(u => u.id);
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username).IsUnique();
+                .Ignore(u => u.create_at)
+                .Ignore(u => u.update_at);
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email).IsUnique();
+                .HasIndex(u => u.username).IsUnique();
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.email).IsUnique();
         }
     }
 }
